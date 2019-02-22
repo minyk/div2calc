@@ -37,21 +37,21 @@ const armour_datas = {
             mmr_dmg: "0.1",
             hs_dmg: "0.1",
             acc: "0.1",
-            //order: { acc, hs_dmg, mmr_dmg },
+            order: [ 'acc', 'hs_dmg', 'mmr_dmg' ],
             longname: 'Airaldi Holdings',
         },
         china: {
             sg_dmg: "0.08",
             sk_haste: "0.1",
             all_res: "0.1",
-            //order: { sg_dmg, all_res, sk_haste },
+            order: [ 'sg_dmg', 'all_res', 'sk_haste' ],
             longname: 'China Light',
         },
         murakami: {
             firefly_pwr: "0.15",
             hazard_prot: "0.1",
             health: "0.08",
-            //order: { health, hazard_prot, firefly_pwr },
+            order: [ 'health', 'hazard_prot', 'firefly_pwr' ],
             longname: 'Murakami',
         },
 
@@ -59,14 +59,14 @@ const armour_datas = {
             pistol_dmg: "0.2",
             shield_pwr: "0.15",
             hazard_prot: "0.1",
-            //order: { hazard_prot, pistol_dmg, shield_pwr },
+            order: [ 'hazard_prot', 'pistol_dmg', 'shield_pwr' ],
             longname: 'Richter & Kaiser',
         },
         petrov: {
             lmg_dmg: "0.08",
             turret_pwr: "0.15",
             cooldown_red: "0.1",
-            //order: { lmg_dmg, turret_pwr, cooldown_red },
+            order: [ 'lmg_dmg', 'turret_pwr', 'cooldown_red' ],
             longname: 'Petrov Defence',
         },
 
@@ -74,7 +74,7 @@ const armour_datas = {
             rifle_dmg: "0.1",
             dte: "0.07",
             total_armor: "0.075",
-            //order: { rifle_dmg, total_armor, dte },
+            order: [ 'rifle_dmg', 'total_armor', 'dte' ],
             longname: 'Overlord',
         },
 
@@ -82,7 +82,7 @@ const armour_datas = {
             ass_dmg: "0.1",
             elite_prot: "0.1",
             hok: "0.2",
-            //order: { ass_dmg, elite_prot, hok },
+            order: [ 'ass_dmg', 'elite_prot', 'hok' ],
             longname: 'Fenris Group',
         },
 
@@ -90,7 +90,7 @@ const armour_datas = {
             smg_dmg: "0.1",
             chd: "0.08",
             seeker_pwr: "0.15",
-            //order: { smg_dmg, chd, seeker_pwr },
+            order: [ 'smg_dmg', 'chd', 'seeker_pwr' ],
             longname: 'Sokolov Concern',
         },
 
@@ -98,7 +98,7 @@ const armour_datas = {
             chc: "0.07",
             chd: "0.1",
             acc: "0.05",
-            //order: { acc, chd, chc },
+            order: [ 'acc', 'chd', 'chc' ],
             longname: 'Douglas & Harding',
         },
 
@@ -106,7 +106,7 @@ const armour_datas = {
             sk_pwr: "0.05",
             hive_pwr: "0.15",
             cooldown_red: "0.1",
-            //order: { cooldown_red, sk_pwr, hive_pwr },
+            order: [ 'cooldown_red', 'sk_pwr', 'hive_pwr' ],
             longname: 'Alps Summit',
         },
 
@@ -114,7 +114,7 @@ const armour_datas = {
             weapon_dmg: "0.05",
             sk_pwr: "0.1",
             health: "0.08",
-            //order: { sk_pwr, health, weapon_dmg },
+            order: [ 'sk_pwr', 'health', 'weapon_dmg' ],
             longname: 'Providence defence',
         },
 
@@ -122,7 +122,7 @@ const armour_datas = {
             chc: "0.07",
             chd: "0.07",
             drone_pwr: "0.15",
-            //order: { chd, drone_pwr, chc },
+            order: [ 'chd', 'drone_pwr', 'chc' ],
             longname: 'Wyvern Wear',
         },
 
@@ -130,7 +130,7 @@ const armour_datas = {
             dte: "0.07",
             chem_pwr: "0.15",
             aok: "0.15",
-            //order: { dte, aok, chem_pwr },
+            order: [ 'dte', 'aok', 'chem_pwr' ],
             longname: 'Badger Tuff',
         },
 
@@ -138,7 +138,7 @@ const armour_datas = {
             pulse_pwr: "0.15",
             hazard_prot: "0.2",
             total_armor: "0.05",
-            //order: { total_armor, hazard_prot, pulse_pwr },
+            order: [ 'total_armor', 'hazard_prot', 'pulse_pwr' ],
             longname: 'Gila guard',
         },
     }

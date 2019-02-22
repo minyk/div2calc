@@ -30,28 +30,97 @@
     <a href="https://tomclancy-thedivision.ubisoft.com/"><img id=td2logo src="img/d2_logo_ncsa.png" /></a>
     <h1 class="hiorange header">Armour brands</h1>
     <div id="myGrid" style="height: 80%; margin: auto auto; max-width: 1400px" class="ag-theme-balham"></div>
+
+    <ul>
+        <li>Data original source: <a href="https://mobile.twitter.com/DivisionAcademy/status/1098283470613299205">Division academy tweet</a></li>
+        <li>Data in a <a href="https://docs.google.com/spreadsheets/d/1OvgJP6kdePD5shcWO61OdD4nlTKZQrCe5XzgTQexzA8/">google sheet</a></li>
+        <li>Contact: <a href="https://twitter.com/psilomon/">@psilomon</a></li>
+    </ul>
+
     <script type="module" src="armour.js"></script>
     <script type="module">
 
-    import armour_data from './armour.js';
+import armour_data from './armour.js';
 
+let grid;
+
+main();
+
+function main() 
+{
     const defaultColDef = {
         width: 75,
         //filter: 'agNumberColumnFilter',
+        valueFormatter: formatPercentages,
+        cellEditorSelector: editorSelector,
+        editable: true,
     };
 
     const cdefs = BuildColumnDefs(armour_data);
-    const data = BuildData(armour_data);
+    const data_full = BuildData(armour_data);
+    const piecesRow = data_full[0];
+    const modRows = data_full.slice(1);
 
     const gridOptions = {
         columnDefs: cdefs,
         defaultColDef: defaultColDef,
-        rowData: data,
+        rowData: modRows,
+        onGridReady: params => params.api.sizeColumnsToFit(),    
+        onCellEditingStopped: event => {
+                //console.log(event);
+                //console.log('cellEditingStopped');
+                //event.data.airaldi = 5;
+                let setnames = Object.keys(armour_data.sets);
+                event.api.forEachNode((rowNode, index) => { 
+                    let total = 0;
+                    let data = rowNode.data;
+                    setnames.forEach(setname => {
+                        if(!data[setname])
+                            return;
+                        if (piecesRow[setname] < 1)
+                            return;
+                        let index = armour_data.sets[setname].order.indexOf(data.rowid);
+                        if (index < 0 || piecesRow[setname] < index + 1)
+                            return;
+                        total += data[setname]*1;
+                    });
+                    if (total === 0)
+                        total = undefined;
+                    data["total"] = total;
+                });
+                event.api.refreshCells();
+            },
+        getRowStyle: params => {
+            if (params.node.rowPinned) {
+                return {'font-weight': 'bold'};
+            }
+        },
+        pinnedTopRowData: [ piecesRow ],
     };
     const eGridDiv = document.querySelector('#myGrid');
-    new agGrid.Grid(eGridDiv, gridOptions);
+    grid = new agGrid.Grid(eGridDiv, gridOptions);
+    
+}
 
+function editorSelector(params) {
+    //console.log(params);
+    if (params.data.rowid === 'pieces')
+        return { component: 'agPopupSelectCellEditor', params: {values: [0, 1, 2, 3]}};
+    return null;
+}
 
+function formatPercentages(value) {
+    if (!value.value)
+        return value.value;
+    value = ''+value.value;    
+    if (value.startsWith('0.')) {
+        value = (value*100).toFixed(2).toString();
+        if (value.endsWith('.00'))
+            value = value.substr(0, value.length - 3)
+        return value+'%';
+    }
+    return value;
+}
 
 function BuildColumnDefs(ar) {
     let coldefs = []
@@ -62,15 +131,18 @@ function BuildColumnDefs(ar) {
             // console.log(setname);
             coldefs.push({ headerName: ar.sets[setname].longname, field: setname, type: "numericColumn" });
         })
+    coldefs.push({headerName: "Total", field: 'total'});
     return coldefs;
 }
 function BuildData(ar)
-{
-    let data = [];
+{    
     let setnames = Object.keys(ar.sets);
+    var piecesRow = { rowid: 'pieces', modname: 'Pieces Equipped' };
+    setnames.forEach(setname => piecesRow[setname] = 0);
+    let data = [piecesRow];
     Object.keys(ar.mods)
         .forEach( modname => {
-            let row = { modname: ar.mods[modname].name };
+            let row = { rowid: modname, modname: ar.mods[modname].name };
             setnames.forEach(setname => row[setname] = ar.sets[setname][modname]);
             data.push(row);
         })
