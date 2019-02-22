@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://unpkg.com/ag-grid-community/dist/ag-grid-community.min.noStyle.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/ag-grid-community/dist/styles/ag-grid.css" />
+    <link rel="stylesheet" href="https://unpkg.com/ag-grid-community/dist/styles/ag-theme-balham.css" />
+    <style>
+    body {
+        background: rgb(217,215,204);
+        font-family: Borda-Medium, Borda, Helvetica, sans-serif;
+        color: black;
+    }
+    .hiorange {
+        color: rgb(255, 106, 19);
+    }
+    .header {
+        text-transform: uppercase;
+        font-size: 3em;
+        font-family: Europa, Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+        font-weight: 800;        
+        line-height: 2.625rem;
+        margin-left: 2em;
+    }
+    #td2logo {
+        clear: both;
+    }
+    </style>
+</head>
+<body>
+    <a href="https://tomclancy-thedivision.ubisoft.com/"><img id=td2logo src="img/d2_logo_ncsa.png" /></a>
+    <h1 class="hiorange header">Armour brands</h1>
+    <div id="myGrid" style="height: 80%; margin: auto auto; max-width: 1400px" class="ag-theme-balham"></div>
+    <script type="module" src="armour.js"></script>
+    <script type="module">
+
+    import armour_data from './armour.js';
+
+    const defaultColDef = {
+        width: 75,
+        //filter: 'agNumberColumnFilter',
+    };
+
+    const cdefs = BuildColumnDefs(armour_data);
+    const data = BuildData(armour_data);
+
+    const gridOptions = {
+        columnDefs: cdefs,
+        defaultColDef: defaultColDef,
+        rowData: data,
+    };
+    const eGridDiv = document.querySelector('#myGrid');
+    new agGrid.Grid(eGridDiv, gridOptions);
+
+
+
+function BuildColumnDefs(ar) {
+    let coldefs = []
+    coldefs.push({headerName: 'Mod', field: 'modname', width: 150});
+    Object.keys(ar.sets)
+        .forEach( setname => 
+        {
+            // console.log(setname);
+            coldefs.push({ headerName: ar.sets[setname].longname, field: setname, type: "numericColumn" });
+        })
+    return coldefs;
+}
+function BuildData(ar)
+{
+    let data = [];
+    let setnames = Object.keys(ar.sets);
+    Object.keys(ar.mods)
+        .forEach( modname => {
+            let row = { modname: ar.mods[modname].name };
+            setnames.forEach(setname => row[setname] = ar.sets[setname][modname]);
+            data.push(row);
+        })
+    return data;
+}
+</script>
+</body>
+</html>
