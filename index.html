@@ -1,16 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 
 <head>
     <link rel="icon" type="image/png" sizes="16x16" href="img/favicon-16.png">
+    <meta charset="utf-8">
     <script src="https://unpkg.com/ag-grid-community/dist/ag-grid-community.min.noStyle.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Noto+Sans+KR" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/ag-grid-community/dist/styles/ag-grid.css" />
     <!-- <link rel="stylesheet" href="https://unpkg.com/ag-grid-community/dist/styles/ag-theme-balham.css" /> -->
     <link rel="stylesheet" href="https://unpkg.com/ag-grid-community/dist/styles/ag-theme-dark.css" />
     <style>
         body {
             background: rgb(217, 215, 204);
-            font-family: Borda-Medium, Borda, Helvetica, sans-serif;
+            font-family: 'Noto Sans KR', sans-serif;
             color: black;
         }
 
@@ -20,8 +22,8 @@
 
         .header {
             text-transform: uppercase;
+            font-family: 'Noto Sans KR', sans-serif;
             font-size: 3em;
-            font-family: Europa, Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
             font-weight: 800;
             line-height: 2.625rem;
             margin-left: 2em;
@@ -52,7 +54,7 @@
 
 <body>
     <a href="https://tomclancy-thedivision.ubisoft.com/"><img id=td2logo src="img/d2_logo_ncsa.png" /></a>
-    <h1 class="hiorange header">Armour brands calculator</h1>
+    <h1 class="hiorange header">브렌드 셋 계산기</h1>
     <p class="exptext">
         Totals are calculated additively (this might not be so in the game).<br>
         Click on the number on the 'Pieces Equipped' row to change how many pieces of armor you want to equip.
@@ -60,13 +62,14 @@
     <div id="myGrid" style="height: 80%; margin: auto auto; max-width: 1400px" class="ag-theme-dark"></div>
 
     <ul>
-        <li>Data original source: <a
+        <li>데이터 소스: <a
                 href="https://mobile.twitter.com/DivisionAcademy/status/1098283470613299205">Division academy tweet</a>
         </li>
-        <li>Data in a <a
+        <li>구글 스프레드 시트 <a
                 href="https://docs.google.com/spreadsheets/d/1OvgJP6kdePD5shcWO61OdD4nlTKZQrCe5XzgTQexzA8/">google
                 sheet</a></li>
-        <li>Contact: <a href="https://twitter.com/psilomon/">@psilomon</a></li>
+        <li>연락처: 원저자 <a href="https://twitter.com/psilomon/">@psilomon</a></li>
+        <li>연락처: 역자 <a href="https://github.com/minyk/div2calc/issues">minyk</a></li>
     </ul>
 
     <script type="module" src="armour.js"></script>
@@ -109,14 +112,14 @@
                         setnames.forEach(sn => total += parseInt(piecesRow[sn]));
                         if (total > 6)
                             Object.assign(ret, { 'color': 'red'});
-                        else Object.assign(ret, { 
+                        else Object.assign(ret, {
                             'color': 'inherit',
-                            'font-weight': 'bold' 
+                            'font-weight': 'bold'
                         });
                     }
-                    
+
                     return ret;
-                },                
+                },
                 headerHeight: 50,
                 singleClickEdit: true,
                 pinnedTopRowData: [piecesRow],
@@ -126,17 +129,17 @@
         }
 
         function CellEditingStarterEvent(event) {
-            if (event.data.rowid === 'pieces' 
+            if (event.data.rowid === 'pieces'
                 && armour_data.sets[event.column.colId] != undefined)
                 return;
-            grid.gridOptions.api.stopEditing();            
+            grid.gridOptions.api.stopEditing();
         }
 
         function CellEditingStoppedEvent(event) {
             let setnames = Object.keys(armour_data.sets);
             event.api.forEachNode((rowNode, index) => {
                 let total = 0;
-                let data = rowNode.data;                
+                let data = rowNode.data;
                 setnames.forEach(setname => {
                     if (!data[setname])
                         return;
@@ -148,7 +151,7 @@
                     total += data[setname] * 1;
                 });
                 if (total === 0)
-                    total = undefined;                
+                    total = undefined;
                 data["total"] = total;
             });
             let setcount = 0;
@@ -182,19 +185,19 @@
         function BuildColumnDefs(ar) {
             let coldefs = []
             let divColorStyle = { 'font-weight': 'bold', 'color': 'rgb(255, 106, 19)'};
-            coldefs.push({ headerName: 'Mod', field: 'modname', width: 270, cellStyle: divColorStyle });
-            coldefs.push({ headerName: "Total", field: 'total', cellStyle: divColorStyle });
+            coldefs.push({ headerName: '속성', field: 'modname', width: 270, cellStyle: divColorStyle });
+            coldefs.push({ headerName: "총", field: 'total', cellStyle: divColorStyle });
             Object.keys(ar.sets)
                 .forEach(setname => {
                     // console.log(setname);
                     coldefs.push({ headerName: ar.sets[setname].longname, field: setname, type: "numericColumn" });
-                })            
+                })
             return coldefs;
         }
 
         function BuildData(ar) {
             let setnames = Object.keys(ar.sets);
-            var piecesRow = { rowid: 'pieces', modname: 'Pieces Equipped' };
+            var piecesRow = { rowid: 'pieces', modname: '장착 갯수' };
             setnames.forEach(setname => piecesRow[setname] = 0);
             let data = [piecesRow];
             Object.keys(ar.mods)
@@ -206,7 +209,7 @@
             return data;
         }
     </script>
-<!-- Global site tag (gtag.js) - Google Analytics -->
+<!-- Global site tag (gtag.js) - Google Analytics
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-82008-6"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -215,6 +218,6 @@
 
   gtag('config', 'UA-82008-6');
 </script>
-
+-->
 </body>
 </html>
